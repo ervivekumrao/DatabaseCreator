@@ -176,6 +176,7 @@ case ${CONTAINER_DB_TYPE,,} in
     sed -i "s/MONGO_INITDB_DATABASE_VALUE/$(getProperty 'MONGODB_DBNAME')/g" "${dockerfile}"
     sed -i "s/MONGO_INITDB_ROOT_USERNAME_VALUE/$(getProperty 'MONGODB_USER_ID')/g" "${dockerfile}"
     sed -i "s/MONGO_INITDB_ROOT_PASSWORD_VALUE/$(getProperty 'MONGODB_USER_PASSWORD')/g" "${dockerfile}"
+    sed -i "s/MONGO_INITDB_SCHEMA_VALUE/$(getProperty 'MONGODB_USER_SCHEMA')/g" "${dockerfile}"
 
     cd "$(pwd)/build" || exit
     if [ -z "$(docker image inspect "${CONTAINER_REPO_NAME}":"${CONTAINER_IMAGE_NAME}" &> /dev/null)" ]; then
