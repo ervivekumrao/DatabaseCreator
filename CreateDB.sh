@@ -31,7 +31,6 @@ for (( index=0; index<${#args[@]}; index+=2 )); do
         if [ -n "${TYPE}" ] ; then
           CONTAINER_DB_TYPE=${TYPE}
         fi
-        echo "$CONTAINER_DB_TYPE"
         ;;
 
       -v | --database-version)
@@ -92,7 +91,7 @@ case ${CONTAINER_DB_TYPE,,} in
 
   mysql)
     #MYSQL DB Build section
-    echo -n "Building MYSQL"
+    printf "\n Building MYSQL"
     cp -rf "$(pwd)/Database/MYSQL/." "$(pwd)/build"
 
     dockerfile="$(pwd)/build/Dockerfile"
@@ -110,7 +109,7 @@ case ${CONTAINER_DB_TYPE,,} in
 
   db2)
     #IBM DB2 Build section
-    echo -n "Building IBM DB2"
+    printf "\n Building IBM DB2"
     cp -rf "$(pwd)/Database/IBMDB2/." "$(pwd)/build"
 
     dockerfile="$(pwd)/build/Dockerfile"
@@ -130,7 +129,7 @@ case ${CONTAINER_DB_TYPE,,} in
 
   postgres | postgresql)
     #SQL Server Build section
-    echo -n "Building PostgreSQL"
+    printf "\n Building PostgreSQL"
     cp -rf "$(pwd)/Database/PostgreSQL/." "$(pwd)/build"
 
     dockerfile="$(pwd)/build/Dockerfile"
@@ -148,7 +147,7 @@ case ${CONTAINER_DB_TYPE,,} in
 
   mssql |"sql server")
     #SQL Server Build section
-    echo -n "Building SQL Server"
+    printf "\n Building SQL Server"
     cp -rf "$(pwd)/Database/SqlServer/." "$(pwd)/build"
 
     dockerfile="$(pwd)/build/Dockerfile"
@@ -168,37 +167,54 @@ case ${CONTAINER_DB_TYPE,,} in
     docker run --privileged=true -d --name "${CONTAINER_DB_NAME}" -p "${CONTAINER_DB_PORT}":1433 "${CONTAINER_REPO_NAME}":"${CONTAINER_IMAGE_NAME}"
     ;;
 
+  mongodb)
+    #MongoDB Build section
+    printf "\n Building MongoDB"
+    cp -rf "$(pwd)/Database/MongoDB/." "$(pwd)/build"
+
+    dockerfile="$(pwd)/build/Dockerfile"
+    sed -i "s/MONGO_INITDB_DATABASE_VALUE/$(getProperty 'MONGODB_DBNAME')/g" "${dockerfile}"
+    sed -i "s/MONGO_INITDB_ROOT_USERNAME_VALUE/$(getProperty 'MONGODB_USER_ID')/g" "${dockerfile}"
+    sed -i "s/MONGO_INITDB_ROOT_PASSWORD_VALUE/$(getProperty 'MONGODB_USER_PASSWORD')/g" "${dockerfile}"
+
+    cd "$(pwd)/build" || exit
+    if [ -z "$(docker image inspect "${CONTAINER_REPO_NAME}":"${CONTAINER_IMAGE_NAME}" &> /dev/null)" ]; then
+      docker buildx build . --tag "${CONTAINER_REPO_NAME}":"${CONTAINER_IMAGE_NAME}" --build-arg DB_VERSION="${CONTAINER_DB_VERSION}"
+    fi
+    docker run --privileged=true -d --name "${CONTAINER_DB_NAME}" -p "${CONTAINER_DB_PORT}":27017 "${CONTAINER_REPO_NAME}":"${CONTAINER_IMAGE_NAME}"
+    ;;
+
   *)
-    echo -n "unknown"
+    printf "\n unknown DB type."
     ;;
 esac
 
 #Check if container created
 if [ "$(docker inspect -f "{{.State.Running}}" "${CONTAINER_DB_NAME}")" = true ];
 then
-     echo "Container ${CONTAINER_DB_NAME} exists."
+     printf "\n Container %s exists." "${CONTAINER_DB_NAME}"
 else
-     echo "Container ${CONTAINER_DB_NAME} missing, error messages."
+     printf "\n Container %s missing, error messages." "${CONTAINER_DB_NAME}"
      exit
 fi
 
 #DB Container health check
-echo "Container have started; now waiting for container to be in healthy state..."
+printf "\n Container have started; now waiting for container to be in healthy state..."
 i=0
 while [ "$( docker container inspect -f '{{.State.Health.Status}}' "${CONTAINER_DB_NAME}" )" != "healthy" ] && [ $i != 60 ]; do
 sleep 10s
 if [ $i = 30  ]; then
-  echo "DB container is not healthy in $(( i * 10 )) minute now attempting restart on "
+  printf "\n DB container is not healthy in %s minute now attempting restart on " "$(( i * 10 ))"
   docker restart "${CONTAINER_DB_NAME}"
-  echo "checking health status again"
+  printf "\n checking health status again"
 fi
 ((i++))
 done
 
 if [ "$( docker container inspect -f '{{.State.Health.Status}}' "${CONTAINER_DB_NAME}" )" = "healthy"  ]; then
-  echo "DB container is healthy now."
+  printf "\n DB container is healthy now.\n"
 else
-  echo "DB container is health check fail. Check manually if not working try building it again."
+  printf "\n DB container is health check fail. Check manually if not working try building it again.\n"
 fi
 
 rm -rf ../build
