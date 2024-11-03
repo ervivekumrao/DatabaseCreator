@@ -2,8 +2,8 @@
 
 ## Features
 
-- Create `docker` based Database images and containers.
-- Oracle, SQL Server, PostgreSQL, IBM DB2, MySQL, MongoDB supported.
+- Create `Docker` based Database images and containers.
+- Oracle, SQL Server, PostgreSQL, IBM DB2, MySQL and MongoDB are supported database types.
 
 ## How to build database containers
 Go to this project root directory, run `CreateDB.sh` file 
@@ -12,7 +12,7 @@ Go to this project root directory, run `CreateDB.sh` file
 
 Below parameters can be used with above command
 - `-t` or `--database-type` defines the database vendor. Accepted values are below
-  > `oracle` for ORACLE database, 
+  > **`oracle`** for ORACLE database, 
   <br> `mssql` or `sql server` for Microsoft SQL Server database 
   <br> `PostgreSQL` or `postgres` for PostgreSQL database
   <br> `db2` for IBM DB2 database
