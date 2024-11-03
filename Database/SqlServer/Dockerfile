@@ -1,5 +1,6 @@
 ARG DB_VERSION
-FROM mcr.microsoft.com/mssql/server:${DB_VERSION}-latest
+FROM mcr.microsoft.com/mssql/server:${DB_VERSION}
+#FROM mcr.microsoft.com/mssql/server:${DB_VERSION}-latest
 MAINTAINER vivek.umrao
 EXPOSE 1433
 

@@ -1,7 +1,7 @@
 ARG DB_VERSION
-FROM ibmcom/db2:${DB_VERSION}
+#FROM ibmcom/db2:${DB_VERSION}
 #FROM ibmcom/db2:11.5.8.0
-#FROM icr.io/db2_community/db2:${DB_VERSION}
+FROM icr.io/db2_community/db2:${DB_VERSION}
 MAINTAINER vivek.umrao
 EXPOSE 50000
 

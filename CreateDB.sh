@@ -13,12 +13,13 @@ function show_usage() {
    printf "\n"
    printf "Options:\n"
    printf " -t|--database-type [database vendor you want to build. db2, mysql, postgres, mssql are accepted values.][Required] \n"
-   printf " -v|--database-version [database vendor version. For SqlServer 2017 to 2022 are accepted but for all other docker supported versions can be used as value.][Optional] \n"
+   printf " -v|--database-version [database vendor version. For SqlServer 2017-latest to 2022-latest are accepted but for all other latest or specific version can be used as value.][Optional] \n"
    printf " -n|--database-name [database name that you want to assign to your container in case you want to have more container.][Optional] \n"
    printf " -p|--docker-port [container port on which you want to access your db.][Optional] \n"
    printf " -i|--image-name [docker image name that you want to give in case you want to have more than one images.][Optional] \n"
    printf " -r|--image-repo [In case you want to assign your own repo name.][Optional] \n"
    printf " -h|--help, Print help\n"
+   printf " For more info see: https://github.com/ervivekumrao/DatabaseCreator \n"
 }
 
 args=("$@")
@@ -177,7 +178,7 @@ case ${CONTAINER_DB_TYPE,,} in
     sed -i "s/MSSQL_SCHEMA_VALUE/$(getProperty 'MSSQL_USER_SCHEMA')/g" "${dockerfile}"
 
     if [ "${CONTAINER_DB_VERSION}" = latest ]; then
-      CONTAINER_DB_VERSION=2022
+      CONTAINER_DB_VERSION=2022-latest
     fi
     cd "$(pwd)/build" || exit
     if [ -z "$(docker image inspect "${CONTAINER_REPO_NAME}":"${CONTAINER_IMAGE_NAME}" &> /dev/null)" ]; then

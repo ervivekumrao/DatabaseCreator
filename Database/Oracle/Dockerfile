@@ -2,7 +2,7 @@ ARG DB_VERSION
 FROM ghcr.io/oracle/adb-free:$DB_VERSION
 #FROM ghcr.io/oracle/adb-free:latest
 #FROM ghcr.io/oracle/adb-free:latest-23ai
-
+MAINTAINER vivek.umrao
 EXPOSE 1521
 
 #ENV WORKLOAD_TYPE ADW
