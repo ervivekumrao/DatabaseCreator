@@ -44,7 +44,8 @@ Below parameters can be used with above command
 - `-h` or `--help` Access help section.
 
 Sample command
-  > ./CreateDB.sh -t mongoDB -n mydb -i myimg -p 88888
+  
+    ./CreateDB.sh -t mongoDB -n mydb -i myimg -p 88888
 
 ## Prerequisite 
 - Supported on Linux based OS and on Linux in WSL.
@@ -59,9 +60,11 @@ Sample command
 ## Troubleshoot
 - Docker build and docker run command can fail due to conflicting name. Double check while you pass database name and image name in createDB command with existing images and containers.
 - Sometimes your container may not be up in time due to this reason you see container is in unhealthy state or database, schema, user may be missing. Restart container:
-  > docker restart CONTAINER_ID
+
+        docker restart CONTAINER_ID
 - In case you want to clean every docker image and container created or downloaded and start fresh then stop all running containers and use below command:
-  > docker volume prune -f && docker volume prune -af && docker image prune -f && docker image prune -af && docker system prune -f && docker system prune -af && docker container prune -f
+
+        docker volume prune -f && docker volume prune -af && docker image prune -f && docker image prune -af && docker system prune -f && docker system prune -af && docker container prune -f
 
 
  
