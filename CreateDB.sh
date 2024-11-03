@@ -145,6 +145,25 @@ case ${CONTAINER_DB_TYPE,,} in
     docker run --privileged=true -d --name "${CONTAINER_DB_NAME}" -p "${CONTAINER_DB_PORT}":5432 "${CONTAINER_REPO_NAME}":"${CONTAINER_IMAGE_NAME}"
     ;;
 
+  oracle)
+    #Oracle Build section
+    printf "\n Building Oracle DB"
+    cp -rf "$(pwd)/Database/Oracle/." "$(pwd)/build"
+
+    dockerfile="$(pwd)/build/Dockerfile"
+    sed -i "s/WALLET_PASSWORD_VALUE/$(getProperty 'ORACLE_WALLET_PASSWORD')/g" "${dockerfile}"
+    sed -i "s/ADMIN_PASSWORD_VALUE/$(getProperty 'ORACLE_ADMIN_PASSWORD')/g" "${dockerfile}"
+    sed -i "s/DATABASE_NAME_VALUE/$(getProperty 'ORACLE_DBNAME')/g" "${dockerfile}"
+    sed -i "s/USER_NAME_VALUE/$(getProperty 'ORACLE_USER_ID')/g" "${dockerfile}"
+    sed -i "s/USER_PASSWORD_VALUE/$(getProperty 'ORACLE_USER_PASSWORD')/g" "${dockerfile}"
+
+    cd "$(pwd)/build" || exit
+    if [ -z "$(docker image inspect "${CONTAINER_REPO_NAME}":"${CONTAINER_IMAGE_NAME}" &> /dev/null)" ]; then
+      docker buildx build . --tag "${CONTAINER_REPO_NAME}":"${CONTAINER_IMAGE_NAME}" --build-arg DB_VERSION="${CONTAINER_DB_VERSION}"
+    fi
+    docker run --privileged=true -d --name "${CONTAINER_DB_NAME}" -p "${CONTAINER_DB_PORT}":1521 --cap-add SYS_ADMIN --device /dev/fuse "${CONTAINER_REPO_NAME}":"${CONTAINER_IMAGE_NAME}"
+    ;;
+
   mssql |"sql server")
     #SQL Server Build section
     printf "\n Building SQL Server"
