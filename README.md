@@ -50,7 +50,8 @@ Sample command
 ## Prerequisite 
 - Supported on Linux based OS and on Linux in WSL.
 - Docker installation required.
-  > sudo apt install -y docker docker-buildx
+
+      sudo apt install -y docker docker-buildx
 
 ## Built DB with custom credentials 
 - Database configuration can be changed via `Database.properties` file. 
