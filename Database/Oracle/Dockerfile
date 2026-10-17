@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2024-2026 Vivek Umrao and DatabaseCreator contributors.
+
 ARG DB_VERSION
 FROM ghcr.io/oracle/adb-free:$DB_VERSION
 #FROM ghcr.io/oracle/adb-free:latest
@@ -13,7 +16,7 @@ ENV DATABASE_NAME DATABASE_NAME_VALUE
 ENV USER_NAME USER_NAME_VALUE
 ENV USER_PASSWORD USER_PASSWORD_VALUE
 
-COPY --chmod=0777 setupDB.sql /u01/scripts/setupDB.sql
+COPY --chmod=0644 setupDB.sql /u01/scripts/setupDB.sql
 
 #Update sql file with environment variable values so no need to update multiple places
 RUN sed -i -e "s/userid/${USER_NAME}/g" /u01/scripts/setupDB.sql

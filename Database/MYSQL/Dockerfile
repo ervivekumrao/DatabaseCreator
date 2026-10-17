@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2024-2026 Vivek Umrao and DatabaseCreator contributors.
+
 ARG DB_VERSION
 FROM mysql:${DB_VERSION}
 MAINTAINER vivek.umrao
@@ -12,7 +15,7 @@ ENV MYSQL_USER MYSQL_USER_VALUE
 ENV MYSQL_PASSWORD MYSQL_PASSWORD_VALUE
 ENV MYSQL_ROOT_PASSWORD MYSQL_ROOT_PASSWORD_VALUE
 
-COPY --chmod=0777 setupDB.sql /docker-entrypoint-initdb.d
+COPY --chmod=0644 setupDB.sql /docker-entrypoint-initdb.d
 
 #Update sql file with environment variable values so no need to update multiple places
 RUN sed -i "s/userdata/${MYSQL_DATABASE}/g" /docker-entrypoint-initdb.d/setupDB.sql

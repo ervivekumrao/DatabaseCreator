@@ -1,0 +1,12 @@
+# DatabaseCreator .dockerignore
+.git/
+.gitignore
+.idea/
+.vscode/
+tests/
+docs/
+*.md
+Makefile
+build.*
+tmp/
+*.log

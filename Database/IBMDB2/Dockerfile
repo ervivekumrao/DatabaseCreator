@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2024-2026 Vivek Umrao and DatabaseCreator contributors.
+
 ARG DB_VERSION
 #FROM ibmcom/db2:${DB_VERSION}
 #FROM ibmcom/db2:11.5.8.0
@@ -25,6 +28,8 @@ ENV HADR_ENABLED=false
 #ENV ETCD_PASSWORD=
 
 WORKDIR /var/custom
-COPY --chmod=0777 entrypoint.sh /var/custom/
+COPY --chmod=0755 entrypoint.sh /var/custom/
+
+ENTRYPOINT ["/bin/bash", "-c", "(/var/custom/entrypoint.sh &); exec /var/db2_setup/include/db2_run"]
 
 HEALTHCHECK --interval=60s --timeout=15s --start-period=60s --retries=10 CMD su - ${DB2INSTANCE} -c "db2 connect to ${DBNAME};"

@@ -1,0 +1,10 @@
+-- SPDX-License-Identifier: Apache-2.0
+-- Copyright (c) 2024-2026 Vivek Umrao and DatabaseCreator contributors.
+
+CREATE TABLE IF NOT EXISTS userdata.test (
+    source int,
+    cost int,
+    part_number int
+);
+GRANT ALL PRIVILEGES ON userdata.* TO 'userid'@'%';
+FLUSH PRIVILEGES;

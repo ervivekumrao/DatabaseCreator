@@ -1,4 +1,7 @@
-CREATE USER userid IDENTIFIED BY "0raclePa55w0rd" QUOTA UNLIMITED ON DATA;
+-- SPDX-License-Identifier: Apache-2.0
+-- Copyright (c) 2024-2026 Vivek Umrao and DatabaseCreator contributors.
+
+CREATE USER userid IDENTIFIED BY "password" QUOTA UNLIMITED ON DATA;
 CREATE TABLE userid.test (source int, cost int, part_number int);
 GRANT INSERT, SELECT, UPDATE, DELETE ON userid.test TO userid;
 GRANT CREATE SESSION TO userid;

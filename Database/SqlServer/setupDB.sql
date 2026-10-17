@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: Apache-2.0
+-- Copyright (c) 2024-2026 Vivek Umrao and DatabaseCreator contributors.
+
 sp_configure 'show advanced options', 1;
 GO
 RECONFIGURE;

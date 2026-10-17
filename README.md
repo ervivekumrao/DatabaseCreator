@@ -1,74 +1,145 @@
 # Database Creator
 
-## Features
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Engine](https://img.shields.io/badge/Engine-Podman_%7C_Docker-orange.svg)](#prerequisites--automatic-pre-flight-check)
 
-- Create `Docker` based Database images and containers.
-- Oracle, SQL Server, PostgreSQL, IBM DB2, MySQL and MongoDB are supported database types.
+A fast, unified developer CLI for spinning up containerized databases, in-memory caches, and lakehouse engines using
+**Podman** (default, secure, rootless) with automatic fallback to **Docker**.
 
-## How to build database containers
-Go to this project root directory, run `CreateDB.sh` file 
+---
 
-    ./CreateDB.sh
+## Quickstart
 
-Below parameters can be used with above command
-- `-t` or `--database-type` defines the database vendor. Accepted values are below
-  > `oracle` for ORACLE database, 
-  <br> `mssql` or `sql server` for Microsoft SQL Server database 
-  <br> `PostgreSQL` or `postgres` for PostgreSQL database
-  <br> `db2` for IBM DB2 database
-  <br> `mysql` for MySQL database
-  <br> `mongodb` for MongoDB database
-- `-v` or `--database-version` defines the database version. Accepted values are below
-  > **Oracle:** `latest` and `latest-23ai` can be used. As per document `latest` is for `19c` and `latest-23ai` for `23ai`.
-  <br> Please see for supported versions: https://github.com/oracle/adb-free
+Run `CreateDB.sh` from the repository root:
 
-  > **SQL Server:** `2017-latest`, `2019-latest` and `2022-latest`
-  <br> Please see for supported versions: https://hub.docker.com/r/microsoft/mssql-server/
+```bash
+# Spin up PostgreSQL on port 5432
+./CreateDB.sh -t postgres -p 5432 -n dev-pg
 
-  > **PostgreSQL:** `12` to `17` or `latest`
-  <br> Please see for supported versions: https://hub.docker.com/_/postgres/
+# Spin up Redis cache on port 6379
+./CreateDB.sh -t redis -p 6379 -n dev-redis
 
-  > **IBM DB2:** `latest`
-  <br> Please see for supported versions: https://hub.docker.com/r/ibmcom/db2
+# Spin up MySQL on port 3306 with persistent host storage
+./CreateDB.sh -t mysql -p 3306 -n dev-mysql -d /data/mysql
+```
 
-  > **MySQL:** `latest`
-  <br> Please see for supported versions: https://hub.docker.com/_/mysql/
+---
 
-  > **MongoDB:** `latest`
-  <br> Please see for supported versions: https://hub.docker.com/_/mongo/
+## Prerequisites & Automatic Pre-Flight Check
 
-- `-n` or `--database-name` Give your docker container database name. This is useful when you have more than one database container. 
-- `-p` or `--docker-port` Database inside container will use its default database port. However, this port can be mapped to the machine port on which container is running. So you can have more than one database container of same database type running on different port. Useful when you have more than one database container of same database type.
-- `-i` or `--image-name` Give your built image name from which container will be created. Usually give image name when you want to have different type of databases or for same type of database when you want to have different database versions.
-- `-r` or `--image-repo` In case you want to define your local docker image repository name. 
-- `-h` or `--help` Access help section.
+You do **not** need to manually check dependencies. When you run `./CreateDB.sh`, the script automatically checks your
+host system:
 
-Sample command
-  
-        ./CreateDB.sh -t mongoDB -n mydb -i myimg -p 88888
+- **Default Engine:** Uses **Podman** (rootless and daemonless).
+- **Fallback Engine:** If Podman is missing, it notifies you and uses **Docker**.
+- **Missing Tools:** If any tool or container engine is missing, the script displays the **exact copy-paste install
+  command** for your specific operating system (Ubuntu/Debian, Fedora/RHEL, Arch, Alpine, macOS, WSL).
 
-## Prerequisite 
-- Supported on Linux based OS and on Linux in WSL.
-- Docker installation required.
+To run the pre-flight check without launching a database:
 
-        sudo apt install -y docker docker-buildx
+```bash
+./CreateDB.sh --preflight
+```
 
-## Built DB with custom credentials 
-- Database configuration can be changed via `Database.properties` file. 
-- Host, port, JDBC URL, Driver class and driver jar are for reference only and change has no effect on build time. 
-- However, container port can be changed via `-p` build argument in *CreateDB* command.
+---
 
-## Troubleshoot
-- Docker build and docker run command can fail due to conflicting name. Double check while you pass database name and image name in createDB command with existing images and containers.
-- Sometimes your container may not be up in time due to this reason you see container is in unhealthy state or database, schema, user may be missing. Restart container:
+## Supported Databases & Engines
 
-        docker restart CONTAINER_ID
+| Option (`-t`) | Engine                                                 | Default Port    | Internal Data Path          |
+|:--------------|:-------------------------------------------------------|:----------------|:----------------------------|
+| `mysql`       | MySQL Community Server                                 | `3306`          | `/var/lib/mysql`            |
+| `mariadb`     | MariaDB Server                                         | `3306`          | `/var/lib/mysql`            |
+| `postgres`    | PostgreSQL                                             | `5432`          | `/var/lib/postgresql/data`  |
+| `mssql`       | Microsoft SQL Server (2022)                            | `1433`          | `/var/opt/mssql`            |
+| `oracle`      | Oracle Autonomous Database Free                        | `1521`          | `/opt/oracle/oradata`       |
+| `db2`         | IBM DB2 Community Edition                              | `50000`         | `/database`                 |
+| `mongodb`     | MongoDB Document Database                              | `27017`         | `/data/db`                  |
+| `redis`       | Redis / Valkey Cache & Key-Value                       | `6379`          | `/data`                     |
+| `clickhouse`  | ClickHouse Columnar Analytics (OLAP)                   | `8123` / `9000` | `/var/lib/clickhouse`       |
+| `cockroach`   | CockroachDB Distributed SQL (Web UI: 8080)             | `26257`         | `/cockroach/cockroach-data` |
+| `snowflake`   | Snowflake Local Emulator (DuckDB-backed)               | `8080`          | `/data`                     |
+| `databricks`  | Databricks Local Engine (Spark + Delta Lake, UI: 4040) | `10000`         | `/opt/spark/data`           |
 
-- In case you want to clean every docker image and container created or downloaded and start fresh then stop all running containers and use below command:
+---
 
-        docker volume prune -f && docker volume prune -af && docker image prune -f && docker image prune -af && docker system prune -f && docker system prune -af && docker container prune -f
+## CLI Options Reference
 
+```bash
+./CreateDB.sh [OPTIONS]
+```
 
- 
+| Option | Long Option               | Description                                              | Default                               |
+|:-------|:--------------------------|:---------------------------------------------------------|:--------------------------------------|
+| `-t`   | `--database-type`         | Database vendor name (e.g. `mysql`, `postgres`, `redis`) | `mysql`                               |
+| `-p`   | `--docker-port`, `--port` | Host port to map to the database                         | Engine default port                   |
+| `-n`   | `--database-name`         | Container instance name                                  | `localdb`                             |
+| `-v`   | `--database-version`      | Container image tag/version                              | `latest` (or `2022-latest` for MSSQL) |
+| `-d`   | `--data-dir`, `--volume`  | Host directory or named volume for persistent storage    | Ephemeral container storage           |
+| `-e`   | `--engine`                | Force container runtime (`podman` or `docker`)           | Auto-detected                         |
+| `-c`   | `--check`, `--preflight`  | Run environment checkup only                             | -                                     |
+| `-h`   | `--help`                  | Display usage instructions                               | -                                     |
 
+---
 
+## Managing Containers
+
+Control database containers without remembering engine-specific syntax:
+
+```bash
+# View running database containers
+./CreateDB.sh status [name]
+
+# Follow container log output
+./CreateDB.sh logs [name]
+
+# Stop container
+./CreateDB.sh stop [name]
+
+# Remove container
+./CreateDB.sh rm [name]
+```
+
+---
+
+## Configuration & Credentials
+
+Default database names, usernames, passwords, and reference JDBC connection strings are defined
+in [Database.properties](Database.properties).
+
+To customize credentials locally without modifying version-controlled files:
+
+```bash
+# Create local override (gitignored by default)
+cp config/database.env.example Database.properties.local
+```
+
+---
+
+## In-Depth Documentation
+
+For advanced architecture, developer guides, security policies, and testing manuals, refer to the `docs/` directory:
+
+- 📘 **[Architecture & Blueprint](docs/ARCHITECTURE.md)** — Modular subsystems, container lifecycles, and storage design.
+- 🗄️ **[Database Engine Reference](docs/DATABASE_GUIDE.md)** — Connection strings (JDBC, Python, Node.js), client CLI
+  commands, and schemas for all 12 engines.
+- 🛡️ **[Security & Hardening Policy](docs/SECURITY.md)** — Rootless containers, privilege mitigation, and credential
+  governance.
+- 🧪 **[In-Depth Testing Manual](docs/TESTING.md)** — Test harness, unit tests, static linting, and CI/CD integration.
+
+---
+
+## Developer Automation (`Makefile`)
+
+```bash
+make preflight    # Check host tools and container engines
+make lint         # Run static syntax and license checks
+make test         # Run full test suite (lint + unit + integration)
+make status       # Show running database instances
+make clean        # Clean temporary build artifacts
+```
+
+---
+
+## License
+
+Licensed under the **Apache License, Version 2.0**. See [LICENSE](LICENSE) for details.

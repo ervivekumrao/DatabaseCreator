@@ -1,3 +1,6 @@
+-- SPDX-License-Identifier: Apache-2.0
+-- Copyright (c) 2024-2026 Vivek Umrao and DatabaseCreator contributors.
+
 ALTER USER userid SET SEARCH_PATH TO public;
 CREATE SCHEMA IF NOT EXISTS userdata AUTHORIZATION userid;
 CREATE TABLE userdata.test (source int, cost int, part_number int);

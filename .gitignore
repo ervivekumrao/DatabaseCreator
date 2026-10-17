@@ -1,0 +1,39 @@
+# DatabaseCreator .gitignore
+
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Ephemeral build and temporary directories
+build/
+build.*/
+tmp/
+*.tmp
+
+# Environment and sensitive configuration overrides
+*.local.properties
+Database.properties.local
+*.env
+!.env.example
+secrets/
+
+# Database data directories and persistent volumes (if stored locally)
+data/
+pgdata/
+mysqldata/
+mongodata/
+db2data/
+redisdata/
+clickhousedata/
+
+# Logs
+*.log
+logs/
+
+# Container runtime artifacts
+.container-id*
+.podman*

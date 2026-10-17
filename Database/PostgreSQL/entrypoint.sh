@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2024-2026 Vivek Umrao and DatabaseCreator contributors.
 
-apt update && apt -y install openjdk-17-jdk-headless postgresql-16-pljava
+# Custom initialization hook if needed
+exit 0

@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2024-2026 Vivek Umrao and DatabaseCreator contributors.
+
 ARG DB_VERSION
 FROM mcr.microsoft.com/mssql/server:${DB_VERSION}
 #FROM mcr.microsoft.com/mssql/server:${DB_VERSION}-latest
@@ -15,8 +18,8 @@ ENV MSSQL_PID Developer
 ENV MSSQL_TCP_PORT 1433
 
 WORKDIR /var/custom
-COPY --chmod=0777 entrypoint.sh /var/custom/entrypoint.sh
-COPY --chmod=0777 setupDB.sql /var/custom/setupDB.sql
+COPY --chmod=0755 entrypoint.sh /var/custom/entrypoint.sh
+COPY --chmod=0644 setupDB.sql /var/custom/setupDB.sql
 
 #Update sql file with environment variable values so no need to update multiple places
 RUN sed -i -e "s/mssqldb/${MSSQL_DB}/g" /var/custom/setupDB.sql
