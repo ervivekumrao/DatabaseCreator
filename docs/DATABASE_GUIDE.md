@@ -5,7 +5,26 @@
 
 ---
 
-This guide provides technical specifications, connection URLs, CLI connection commands, and code samples for all **12 database, cache, and lakehouse engines** supported by DatabaseCreator.
+This guide provides technical specifications, connection URLs, CLI connection commands, official JDBC driver download paths, and code samples for all **12 database, cache, and lakehouse engines** supported by DatabaseCreator.
+
+---
+
+## JDBC Drivers Quick Reference
+
+| Engine | Driver Class | Official Download Portal | Maven Central |
+|:---|:---|:---|:---|
+| **MySQL** | `com.mysql.cj.jdbc.Driver` | [MySQL Connector/J](https://dev.mysql.com/downloads/connector/j/) | [com.mysql:mysql-connector-j](https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/) |
+| **MariaDB** | `org.mariadb.jdbc.Driver` | [MariaDB Connector/J](https://mariadb.com/downloads/connectors/connectors-data-access/java-connector/) | [org.mariadb.jdbc:mariadb-java-client](https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/) |
+| **PostgreSQL** | `org.postgresql.Driver` | [PostgreSQL JDBC Download](https://jdbc.postgresql.org/download/) | [org.postgresql:postgresql](https://repo1.maven.org/maven2/org/postgresql/postgresql/) |
+| **MSSQL** | `com.microsoft.sqlserver.jdbc.SQLServerDriver` | [Microsoft JDBC Driver](https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server) | [com.microsoft.sqlserver:mssql-jdbc](https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/) |
+| **Oracle** | `oracle.jdbc.OracleDriver` | [Oracle Database JDBC Drivers](https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html) | [com.oracle.database.jdbc:ojdbc11](https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/) |
+| **IBM DB2** | `com.ibm.db2.jcc.DB2Driver` | [IBM DB2 JDBC Drivers](https://www.ibm.com/support/pages/db2-jdbc-driver-versions-and-downloads) | [com.ibm.db2:jcc](https://repo1.maven.org/maven2/com/ibm/db2/jcc/) |
+| **MongoDB** | `mongodb.jdbc.MongoDriver` | [MongoDB JDBC Driver Releases](https://github.com/mongodb/mongo-jdbc-driver/releases) | [org.mongodb:mongodb-jdbc](https://repo1.maven.org/maven2/org/mongodb/mongodb-jdbc/) |
+| **Redis / Valkey** | *N/A (Key-Value cache)* | [Jedis](https://github.com/redis/jedis) / [Lettuce](https://github.com/redis/lettuce) | [redis.clients:jedis](https://repo1.maven.org/maven2/redis/clients/jedis/) |
+| **ClickHouse** | `com.clickhouse.jdbc.ClickHouseDriver` | [ClickHouse Java Releases](https://github.com/ClickHouse/clickhouse-java/releases) | [com.clickhouse:clickhouse-jdbc](https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/) |
+| **CockroachDB** | `org.postgresql.Driver` | [PostgreSQL JDBC Download](https://jdbc.postgresql.org/download/) | [org.postgresql:postgresql](https://repo1.maven.org/maven2/org/postgresql/postgresql/) |
+| **Snowflake** | `net.snowflake.client.jdbc.SnowflakeDriver` | [Snowflake JDBC Driver](https://developers.snowflake.com/drivers/jdbc/) | [net.snowflake:snowflake-jdbc](https://repo1.maven.org/maven2/net/snowflake/snowflake-jdbc/) |
+| **Databricks** | `org.apache.hive.jdbc.HiveDriver` | [Databricks JDBC Driver](https://www.databricks.com/spark/jdbc-drivers-download) | [org.apache.hive:hive-jdbc](https://repo1.maven.org/maven2/org/apache/hive/hive-jdbc/) |
 
 ---
 
@@ -16,6 +35,7 @@ This guide provides technical specifications, connection URLs, CLI connection co
 - **Default Database:** `userdata` | **User:** `userid` | **Password:** `P@55w0rd`
 - **Root User:** `root` | **Root Password:** `P@55w0rd`
 - **Driver Class:** `com.mysql.cj.jdbc.Driver`
+- **Official JDBC Driver:** [MySQL Connector/J Portal](https://dev.mysql.com/downloads/connector/j/) | [Maven Central Repository](https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/)
 - **JDBC URL:** `jdbc:mysql://localhost:3306/userdata?allowPublicKeyRetrieval=true&useSSL=false`
 - **CLI Connection:**
   ```bash
@@ -35,6 +55,7 @@ This guide provides technical specifications, connection URLs, CLI connection co
 - **Default Port:** `3306`
 - **Default Database:** `userdata` | **User:** `userid` | **Password:** `P@55w0rd`
 - **Driver Class:** `org.mariadb.jdbc.Driver`
+- **Official JDBC Driver:** [MariaDB Connector/J Portal](https://mariadb.com/downloads/connectors/connectors-data-access/java-connector/) | [Maven Central Repository](https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/)
 - **JDBC URL:** `jdbc:mariadb://localhost:3306/userdata`
 - **CLI Connection:**
   ```bash
@@ -50,6 +71,7 @@ This guide provides technical specifications, connection URLs, CLI connection co
 - **Default Database:** `pgdb` | **User:** `userid` | **Password:** `P@55w0rd`
 - **Default Schema:** `userdata`
 - **Driver Class:** `org.postgresql.Driver`
+- **Official JDBC Driver:** [PostgreSQL JDBC Official Downloads](https://jdbc.postgresql.org/download/) | [Maven Central Repository](https://repo1.maven.org/maven2/org/postgresql/postgresql/)
 - **JDBC URL:** `jdbc:postgresql://localhost:5432/pgdb`
 - **CLI Connection:**
   ```bash
@@ -71,6 +93,7 @@ This guide provides technical specifications, connection URLs, CLI connection co
 - **Admin User:** `sa` | **Password:** `P@55w0rd`
 - **Default Schema:** `userdata`
 - **Driver Class:** `com.microsoft.sqlserver.jdbc.SQLServerDriver`
+- **Official JDBC Driver:** [Microsoft Learn JDBC Driver Downloads](https://learn.microsoft.com/en-us/sql/connect/jdbc/download-microsoft-jdbc-driver-for-sql-server) | [Maven Central Repository](https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/)
 - **JDBC URL:** `jdbc:sqlserver://localhost:1433;databaseName=mssql;selectMethod=cursor;trustServerCertificate=true;`
 - **CLI Connection:**
   ```bash
@@ -86,6 +109,7 @@ This guide provides technical specifications, connection URLs, CLI connection co
 - **Default Database:** `oracledb` | **User:** `userid` | **Password:** `0raclePa55w0rd`
 - **Admin User:** `admin` | **Password:** `0raclePa55w0rd`
 - **Driver Class:** `oracle.jdbc.OracleDriver`
+- **Official JDBC Driver:** [Oracle Database JDBC Drivers Portal](https://www.oracle.com/database/technologies/appdev/jdbc-downloads.html) | [Maven Central Repository](https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/)
 - **JDBC URL:** `jdbc:oracle:thin:@//localhost:1521/oracledb`
 - **CLI Connection:**
   ```bash
@@ -101,6 +125,7 @@ This guide provides technical specifications, connection URLs, CLI connection co
 - **Default Database:** `ibmdb` | **Instance:** `db2inst` | **Password:** `P@55w0rd`
 - **User:** `userid` | **Password:** `P@55w0rd`
 - **Driver Class:** `com.ibm.db2.jcc.DB2Driver`
+- **Official JDBC Driver:** [IBM DB2 JDBC Driver Downloads](https://www.ibm.com/support/pages/db2-jdbc-driver-versions-and-downloads) | [Maven Central Repository](https://repo1.maven.org/maven2/com/ibm/db2/jcc/)
 - **JDBC URL:** `jdbc:db2://localhost:50000/ibmdb:progressiveLocators=2;`
 - **CLI Connection (inside container):**
   ```bash
@@ -115,6 +140,7 @@ This guide provides technical specifications, connection URLs, CLI connection co
 - **Default Port:** `27017`
 - **Default Database:** `mgdb` | **User:** `userid` | **Password:** `P@55w0rd`
 - **Driver Class:** `mongodb.jdbc.MongoDriver`
+- **Official JDBC Driver:** [MongoDB JDBC Driver Releases](https://github.com/mongodb/mongo-jdbc-driver/releases) | [Maven Central Repository](https://repo1.maven.org/maven2/org/mongodb/mongodb-jdbc/)
 - **Connection URI:** `mongodb://userid:P%4055w0rd@localhost:27017/mgdb?authSource=admin`
 - **CLI Connection:**
   ```bash
@@ -134,6 +160,7 @@ This guide provides technical specifications, connection URLs, CLI connection co
 - **Engine Key:** `-t redis` or `-t valkey`
 - **Default Port:** `6379`
 - **Password:** `P@55w0rd`
+- **Driver / Clients:** *N/A (Key-Value cache — use Java clients: [Jedis](https://github.com/redis/jedis), [Lettuce](https://github.com/redis/lettuce), or [Redisson](https://github.com/redisson/redisson))*
 - **Connection URI:** `redis://:P@55w0rd@localhost:6379/0`
 - **CLI Connection:**
   ```bash
@@ -154,6 +181,7 @@ This guide provides technical specifications, connection URLs, CLI connection co
 - **HTTP Port:** `8123` | **Native Port:** `9000`
 - **Default Database:** `userdata` | **User:** `userid` | **Password:** `P@55w0rd`
 - **Driver Class:** `com.clickhouse.jdbc.ClickHouseDriver`
+- **Official JDBC Driver:** [ClickHouse Java Releases](https://github.com/ClickHouse/clickhouse-java/releases) | [Maven Central Repository](https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/)
 - **JDBC URL:** `jdbc:ch://localhost:8123/userdata`
 - **CLI Connection (HTTP / curl):**
   ```bash
@@ -172,7 +200,8 @@ This guide provides technical specifications, connection URLs, CLI connection co
 - **Engine Key:** `-t cockroach` or `-t cockroachdb`
 - **SQL Port:** `26257` | **Web Console Port:** `8080`
 - **Default Database:** `userdata` | **User:** `userid` | **Password:** `P@55w0rd`
-- **Driver Class:** `org.postgresql.Driver`
+- **Driver Class:** `org.postgresql.Driver` (Uses PostgreSQL JDBC Driver)
+- **Official JDBC Driver:** [PostgreSQL JDBC Official Downloads](https://jdbc.postgresql.org/download/) | [Maven Central Repository](https://repo1.maven.org/maven2/org/postgresql/postgresql/)
 - **JDBC URL:** `jdbc:postgresql://localhost:26257/userdata?sslmode=disable`
 - **CLI Connection (via psql or cockroach sql):**
   ```bash
@@ -190,6 +219,7 @@ This guide provides technical specifications, connection URLs, CLI connection co
 - **Default Database:** `USERDATA` | **Schema:** `PUBLIC` | **Warehouse:** `COMPUTE_WH`
 - **User:** `userid` | **Password:** `P@55w0rd`
 - **Driver Class:** `net.snowflake.client.jdbc.SnowflakeDriver`
+- **Official JDBC Driver:** [Snowflake JDBC Driver Documentation & Downloads](https://developers.snowflake.com/drivers/jdbc/) | [Maven Central Repository](https://repo1.maven.org/maven2/net/snowflake/snowflake-jdbc/)
 - **JDBC URL:** `jdbc:snowflake://localhost:8080/?db=USERDATA&schema=PUBLIC&warehouse=COMPUTE_WH&ssl=off`
 - **Python (snowflake-connector-python):**
   ```python
@@ -214,6 +244,7 @@ This guide provides technical specifications, connection URLs, CLI connection co
 - **Thrift JDBC Port:** `10000` | **Spark Web UI:** `4040`
 - **Default Database:** `userdata` | **Storage Format:** Delta Lake
 - **Driver Class:** `org.apache.hive.jdbc.HiveDriver`
+- **Official JDBC Driver:** [Databricks JDBC Driver Downloads](https://www.databricks.com/spark/jdbc-drivers-download) | [Apache Hive JDBC (Maven Central)](https://repo1.maven.org/maven2/org/apache/hive/hive-jdbc/)
 - **JDBC URL:** `jdbc:hive2://localhost:10000/userdata;auth=noSasl`
 - **CLI Connection (beeline):**
   ```bash
